@@ -1,0 +1,235 @@
+claude,faca um prompt para o codex montar um portifolio pessoal usando as tecnologias a seguir:
+React + Vite
+GSAP + ScrollTrigger
+Three.js / React Three Fiber para o objeto 3D
+Lenis para scroll suave
+Tailwind CSS para layout
+
+com essa estrutura:
+Hero 3D
+↓
+Objeto fixo no centro
+↓
+Scroll muda câmera, escala e textos
+↓
+Seções com frases grandes
+↓
+Cards de projetos
+↓
+Contato final cinematográfico
+
+usando essas cores:
+Fundo: #0A0F1C
+Texto: #E6F1FF
+Primária: #3B82F6
+Glow: #00D4FF
+
+
+
+using [ROTINA.md](ROTINA.md) [RULES.md](RULES.md) [SKILLS.md](SKILLS.md) [AGENTS.md]
+You are a senior frontend developer and creative director. Build a cinematic personal portfolio website with the following exact specifications. Write complete, production-ready code for every file.
+
+---
+
+## TECH STACK (mandatory — do not substitute)
+- React 18 + Vite
+- GSAP + ScrollTrigger (for all scroll-driven animations)
+- React Three Fiber + @react-three/drei (3D object in Hero)
+- Lenis (smooth scroll, integrated with GSAP ticker)
+- Tailwind CSS (layout and utility classes)
+- No extra UI libraries
+
+---
+
+## COLOR SYSTEM (hardcoded as CSS variables in index.css)
+--bg:       #0A0F1C
+--text:     #E6F1FF
+--primary:  #3B82F6
+--glow:     #00D4FF
+
+Background of the entire site must be --bg. All text defaults to --text.
+
+---
+
+## TYPOGRAPHY
+- Display/headings: "Syne" (Google Fonts, weights 700 and 800)
+- Body/labels: "Space Mono" (Google Fonts, weight 400)
+- Import both via @import in index.css
+
+---
+
+## FILE STRUCTURE
+src/
+  components/
+    Hero.jsx
+    About.jsx
+    Projects.jsx
+    Contact.jsx
+    Scene3D.jsx        ← Three.js canvas
+    SectionPhrase.jsx  ← Reusable big-text section
+  hooks/
+    useLenis.js        ← Lenis init + GSAP ticker sync
+  App.jsx
+  main.jsx
+  index.css
+
+---
+
+## SECTION 1 — Hero (Hero.jsx + Scene3D.jsx)
+
+Scene3D.jsx:
+- Full-screen <Canvas> with React Three Fiber
+- Render a TorusKnot geometry (args: [1, 0.35, 200, 32])
+- Material: MeshStandardMaterial, color "#3B82F6", metalness 0.8, roughness 0.1
+- Add a PointLight at [5, 5, 5] intensity 2, color "#00D4FF"
+- Add a subtle ambient AmbientLight intensity 0.3
+- The mesh ref is exposed so GSAP can animate its rotation and scale
+- On mount, start a slow idle rotation (mesh.rotation.y += 0.003 in useFrame)
+- Export the mesh ref via forwardRef or via a zustand/context store
+
+Hero.jsx:
+- Position: full viewport height, flex center, relative
+- Scene3D sits absolutely, full width and height behind the text
+- Text overlay (z-index above canvas):
+    - Small label top-left: "PORTFÓLIO — 2025" in Space Mono, tracking widest, opacity 0.4
+    - Center: name in Syne 800, font-size clamp(3rem, 8vw, 7rem), line-height 0.9
+    - Subtitle below: role or tagline in Space Mono, opacity 0.6
+    - Bottom center: "↓ scroll" animated with a looping fade-up in CSS keyframes
+- GSAP ScrollTrigger pinned to this section:
+    - As user scrolls, animate camera-like effect by scaling and rotating the 3D mesh
+    - Scale mesh from 1 → 2.5 as scrub progresses 0→1
+    - Move text overlay upward (y: 0 → -150) and fade out (opacity: 1 → 0)
+    - mesh.rotation.x goes 0 → Math.PI * 0.5
+
+---
+
+## SECTION 2 — SectionPhrase (reusable)
+
+SectionPhrase.jsx:
+- Props: phrase (string), sub (string, optional)
+- Full viewport height, flex center column, px-8
+- The phrase renders in Syne 800, clamp(2.5rem, 6vw, 5rem), split into words
+- Each word is wrapped in a span with overflow:hidden
+- GSAP: on ScrollTrigger enter, each word animates from y:60,opacity:0 → y:0,opacity:1 with stagger 0.08
+- A thin horizontal line (1px, color --primary, w-0 → w-full) animates in after the words
+
+Use this component twice:
+1. phrase="Código que comunica.", sub="Design que convence."
+2. phrase="Cada projeto, uma intenção."
+
+---
+
+## SECTION 3 — About (About.jsx)
+
+- Two-column layout (left: big number/label, right: paragraph text)
+- Left: "02" in Syne 800, font-size 8rem, color --primary, opacity 0.15 (decorative)
+- Right: 3–4 lines about yourself (placeholder text is fine), Space Mono, line-height 1.8
+- A skill list: 6 items displayed as inline pills (border 1px --primary, text --glow, px-4 py-1 rounded-full)
+- GSAP: section slides in from right (x: 100 → 0) on ScrollTrigger
+
+---
+
+## SECTION 4 — Projects (Projects.jsx)
+
+Data: hardcode 3 project objects:
+  { id, title, tag, year, description, link }
+
+Layout:
+- Stacked vertically, each card full-width
+- Card: dark background (#0D1526), border-left 3px solid --primary
+- On hover: border-left color transitions to --glow, card gets a box-shadow glow (0 0 30px #00D4FF33)
+- Title: Syne 700, 2rem. Tag: Space Mono pill. Year: right-aligned, opacity 0.4
+- Description: Space Mono, small, opacity 0.7
+- GSAP: each card animates in from y:80,opacity:0 on ScrollTrigger with stagger 0.15
+
+---
+
+## SECTION 5 — Contact (Contact.jsx)
+
+- Full viewport height, flex center column, text-center
+- Large heading: "Vamos construir algo." in Syne 800, clamp(3rem,7vw,6rem)
+- Below: email address as a styled anchor, Space Mono, color --glow, no underline, font-size 1.25rem
+- Social links row: GitHub, LinkedIn — text links in Space Mono, hover color --primary
+- Bottom right corner: fixed "©2025" small label
+
+GSAP cinematics:
+- On ScrollTrigger enter: heading letters animate in one by one (split by character, stagger 0.04, y:80→0, opacity:0→1)
+- A radial gradient pulse (keyframe animation in CSS) on the background of this section: from transparent to #3B82F610 and back, 4s loop
+
+---
+
+## SMOOTH SCROLL SETUP (useLenis.js)
+
+```js
+import Lenis from 'lenis'
+import { useEffect } from 'react'
+import gsap from 'gsap'
+
+export function useLenis() {
+  useEffect(() => {
+    const lenis = new Lenis({ lerp: 0.07, smooth: true })
+    gsap.ticker.add((time) => lenis.raf(time * 1000))
+    gsap.ticker.lagSmoothing(0)
+    return () => {
+      gsap.ticker.remove()
+      lenis.destroy()
+    }
+  }, [])
+}
+```
+
+Call useLenis() inside App.jsx.
+
+---
+
+## APP.JSX STRUCTURE
+
+```jsx
+<main style={{ background: 'var(--bg)', color: 'var(--text)' }}>
+  <Hero />
+  <SectionPhrase phrase="Código que comunica." sub="Design que convence." />
+  <About />
+  <SectionPhrase phrase="Cada projeto, uma intenção." />
+  <Projects />
+  <Contact />
+</main>
+```
+
+---
+
+## GSAP SCROLLTRIGGER SETUP
+
+In each component that uses ScrollTrigger:
+- Import ScrollTrigger and register it: gsap.registerPlugin(ScrollTrigger)
+- Use useGSAP hook (from @gsap/react) or useEffect with proper cleanup
+- All ScrollTrigger instances use scrub: 1 for smooth tied-to-scroll feel
+- Pin sections that need pinning with pin: true
+
+---
+
+## PACKAGE.JSON DEPENDENCIES (include all)
+
+"dependencies": {
+  "react": "^18.3.0",
+  "react-dom": "^18.3.0",
+  "@react-three/fiber": "^8.16.0",
+  "@react-three/drei": "^9.105.0",
+  "three": "^0.165.0",
+  "gsap": "^3.12.5",
+  "@gsap/react": "^2.1.0",
+  "lenis": "^1.1.13",
+  "tailwindcss": "^3.4.0",
+  "autoprefixer": "^10.4.19",
+  "postcss": "^8.4.38"
+}
+
+---
+
+## FINAL REQUIREMENTS
+
+- All animations must have will-change: transform on animated elements
+- The 3D canvas must have pointerEvents: 'none' so scroll works normally
+- Mobile: hide the 3D canvas on screens < 768px (replace with a static gradient orb using CSS)
+- No TypeScript — plain JSX only
+- Export all components as default exports
+- Write every file in full — no placeholders, no "// add your code here"
