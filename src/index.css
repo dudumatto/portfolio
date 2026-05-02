@@ -24,13 +24,30 @@
 
 html,
 body {
-  height: 100%;
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar,
+*::-webkit-scrollbar {
+  display: none;
 }
 
 html,
 body,
 #root {
   background: var(--bg);
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 body {
@@ -40,8 +57,11 @@ body {
   font-family: 'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
   overflow-x: hidden;
+  overflow-y: auto;
   line-height: 1.65;
   text-rendering: geometricPrecision;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 ::selection {
@@ -106,6 +126,106 @@ body {
 
 section {
   background: transparent;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.section {
+  min-height: 100svh;
+  width: 100%;
+  padding: clamp(80px, 10vw, 140px) clamp(20px, 6vw, 96px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-inner {
+  width: min(1100px, 100%);
+  margin: 0 auto;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: 0.6fr 1.4fr;
+  gap: clamp(32px, 6vw, 80px);
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .about-content {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+.projects-list {
+  display: grid;
+  gap: 24px;
+}
+
+main {
+  min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.hero {
+  width: 100%;
+  min-height: 100svh;
+  overflow: hidden;
+}
+
+img,
+canvas,
+video {
+  max-width: 100%;
+}
+
+.particles-background,
+.particles-background canvas {
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  pointer-events: none !important;
+  z-index: 0 !important;
+}
+
+.hero-title {
+  font-size: clamp(3rem, 13vw, 9rem);
+  line-height: 0.9;
+  max-width: 100%;
+  text-align: center;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: clamp(3rem, 16vw, 5rem);
+    line-height: 0.9;
+  }
+
+  .hero {
+    padding-inline: 1rem;
+  }
+
+  .section,
+  .section-item,
+  .project-card {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue {
+    animation: none;
+  }
 }
 
 

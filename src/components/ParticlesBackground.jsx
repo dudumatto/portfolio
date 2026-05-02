@@ -8,6 +8,7 @@ import { useGSAP } from '@gsap/react'
 export default function ParticlesBackground() {
   const [ready, setReady] = useState(false)
   const wrapperRef = useRef(null)
+  const innerRef = useRef(null)
 
   useEffect(() => {
     let mounted = true
@@ -25,15 +26,15 @@ export default function ParticlesBackground() {
 
   useGSAP(
     () => {
-      const el = wrapperRef.current
+      const el = innerRef.current
       if (!el) return
 
       const isMobile = window.matchMedia('(max-width: 767px)').matches
       if (isMobile) return
 
       const tween = gsap.to(el, {
-        y: 80,
-        scale: 1.05,
+        y: 60,
+        scale: 1.03,
         ease: 'none',
         scrollTrigger: {
           trigger: document.querySelector('.hero') || document.body,
@@ -81,7 +82,7 @@ export default function ParticlesBackground() {
       },
       particles: {
         number: {
-          value: isMobile ? 18 : 46,
+          value: isMobile ? 12 : 42,
           density: { enable: true, area: 1300 },
         },
         color: { value: particleColor },
@@ -128,21 +129,30 @@ export default function ParticlesBackground() {
   return (
     <div
       ref={wrapperRef}
-      className="background-layer"
+      className="particles-background background-layer"
       aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 0,
         pointerEvents: 'none',
-        transform: 'translate3d(0,0,0)',
       }}
     >
-      <Particles
-        id="tsparticles"
-        options={options}
-        style={{ width: '100%', height: '100%' }}
-      />
+      <div
+        ref={innerRef}
+        style={{
+          position: 'absolute',
+          inset: 0,
+          transform: 'translate3d(0,0,0)',
+          willChange: 'transform',
+        }}
+      >
+        <Particles
+          id="tsparticles"
+          options={options}
+          style={{ width: '100%', height: '100%' }}
+        />
+      </div>
     </div>
   )
 }

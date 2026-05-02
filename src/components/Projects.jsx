@@ -47,11 +47,11 @@ export default function Projects() {
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.45,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             once: true,
           },
         },
@@ -60,39 +60,43 @@ export default function Projects() {
       const targets = cardsRef.current.filter(Boolean)
       const cardsTween = gsap.fromTo(
         targets,
-        { y: 60, opacity: 0 },
+        { y: 26, opacity: 0 },
         {
           y: 0,
           opacity: 1,
-          stagger: 0.12,
-          duration: 0.6,
+          stagger: 0.08,
+          duration: 0.45,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 78%',
+            start: 'top 85%',
             once: true,
           },
         },
       )
 
       const isMobile = window.matchMedia('(max-width: 767px)').matches
-      const parallaxTweens = isMobile
+      const floatTweens = isMobile
         ? []
         : targets.map((card) =>
-            gsap.to(card, {
-              y: -4,
-              ease: 'none',
-              scrollTrigger: {
-                trigger: card,
-                start: 'top bottom',
-                end: 'bottom top',
-                scrub: 0.6,
+            gsap.fromTo(
+              card,
+              { y: 10 },
+              {
+                y: 0,
+                duration: 0.5,
+                ease: 'power2.out',
+                scrollTrigger: {
+                  trigger: card,
+                  start: 'top 88%',
+                  once: true,
+                },
               },
-            }),
+            ),
           )
 
       return () => {
-        ;[entryTween, cardsTween, ...parallaxTweens].forEach((tween) => {
+        ;[entryTween, cardsTween, ...floatTweens].forEach((tween) => {
           tween.scrollTrigger?.kill()
           tween.kill()
         })
@@ -104,59 +108,64 @@ export default function Projects() {
   return (
     <section
       ref={sectionRef}
-      className="projects section mx-auto max-w-6xl px-8 py-28"
+      className="projects section"
     >
-      <div className="section-item mb-10">
-        <h2 className="font-display text-3xl font-bold">Projetos</h2>
-        <p
-          className="mt-2 text-sm opacity-80"
-          style={{ color: 'var(--text-secondary)' }}
-        >
-          Exemplos de entregas (placeholders) para apresentar meus serviços e o
-          tipo de projeto que desenvolvo.
-        </p>
-      </div>
-
-      <div className="flex flex-col gap-6">
-        {projects.map((p, index) => (
-          <a
-            className="section-item project-card group block rounded-lg px-6 py-6 transition-[box-shadow,border-color,transform] duration-300"
-            key={p.id}
-            href={p.link}
-            ref={(el) => {
-              cardsRef.current[index] = el
-            }}
+      <div className="section-inner">
+        <div className="section-item mb-10">
+          <h2 className="font-display text-3xl font-bold">Projetos</h2>
+          <p
+            className="mt-3 text-sm opacity-80"
+            style={{ color: 'var(--text-secondary)' }}
           >
-            <div className="flex items-start justify-between gap-6">
-              <div className="min-w-0">
-                <div className="flex flex-wrap items-center gap-3">
-                  <div className="font-display text-2xl font-bold">
-                    {p.title}
+            Exemplos de entregas (placeholders) para apresentar meus serviços e
+            o tipo de projeto que desenvolvo.
+          </p>
+        </div>
+
+        <div className="projects-list">
+          {projects.map((p, index) => (
+            <a
+              className="section-item project-card group block rounded-lg px-4 py-5 sm:px-6 sm:py-6 transition-[box-shadow,border-color,transform] duration-300"
+              key={p.id}
+              href={p.link}
+              ref={(el) => {
+                cardsRef.current[index] = el
+              }}
+            >
+              <div className="flex items-start justify-between gap-6">
+                <div className="min-w-0">
+                  <div className="flex flex-wrap items-center gap-3">
+                    <div className="font-display text-2xl font-bold">
+                      {p.title}
+                    </div>
+                    <span
+                      className="rounded-full border px-3 py-1 text-xs opacity-90"
+                      style={{
+                        borderColor: 'var(--border)',
+                        color: 'var(--primary)',
+                      }}
+                    >
+                      {p.tag}
+                    </span>
                   </div>
-                  <span
-                    className="rounded-full border px-3 py-1 text-xs opacity-90"
-                    style={{ borderColor: 'var(--border)', color: 'var(--primary)' }}
-                  >
-                    {p.tag}
-                  </span>
+                </div>
+                <div
+                  className="text-sm opacity-80"
+                  style={{ color: 'var(--text-secondary)' }}
+                >
+                  {p.year}
                 </div>
               </div>
-              <div
-                className="text-sm opacity-80"
+
+              <p
+                className="mt-4 text-sm opacity-80"
                 style={{ color: 'var(--text-secondary)' }}
               >
-                {p.year}
-              </div>
-            </div>
-
-            <p
-              className="mt-4 text-sm opacity-80"
-              style={{ color: 'var(--text-secondary)' }}
-            >
-              {p.description}
-            </p>
-          </a>
-        ))}
+                {p.description}
+              </p>
+            </a>
+          ))}
+        </div>
       </div>
     </section>
   )

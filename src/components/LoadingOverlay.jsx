@@ -1,27 +1,45 @@
 import React, { useEffect, useRef, useState } from 'react'
-import { gsap } from '../gsap.js'
+import { gsap, ScrollTrigger } from '../gsap.js'
 
 export default function LoadingOverlay() {
   const [visible, setVisible] = useState(true)
   const rootRef = useRef(null)
-  const barRef = useRef(null)
+  const fillRef = useRef(null)
+  const ringRef = useRef(null)
 
   useEffect(() => {
     const root = rootRef.current
-    const bar = barRef.current
-    if (!root || !bar) return
+    const fill = fillRef.current
+    const ring = ringRef.current
+    if (!root || !fill || !ring) return
 
     gsap.set(root, { opacity: 1 })
-    gsap.set(bar, { scaleX: 0, transformOrigin: '0% 50%' })
+    gsap.set(fill, { scaleY: 0, transformOrigin: '50% 100%' })
+    gsap.set(ring, { scale: 1, transformOrigin: '50% 50%' })
 
     const tl = gsap.timeline({
-      onComplete: () => setVisible(false),
+      onComplete: () => {
+        ScrollTrigger.refresh()
+        setVisible(false)
+      },
     })
 
-    tl.to(bar, { scaleX: 1, duration: 0.9, ease: 'power2.out' })
-      .to(root, { opacity: 0, duration: 0.35, ease: 'power2.out' }, '>-0.05')
+    tl.to(fill, { scaleY: 1, duration: 1.25, ease: 'power2.out' })
+      .to({}, { duration: 0.18 })
+      .to(
+        ring,
+        { scale: 26, duration: 0.5, ease: 'power3.out' },
+        '>-0.02',
+      )
+      .to(root, { opacity: 0, duration: 0.28, ease: 'power2.out' }, '<')
+
+    const safety = window.setTimeout(() => {
+      ScrollTrigger.refresh()
+      setVisible(false)
+    }, 2400)
 
     return () => {
+      window.clearTimeout(safety)
       tl.kill()
     }
   }, [])
@@ -43,22 +61,29 @@ export default function LoadingOverlay() {
         pointerEvents: 'none',
       }}
     >
-      <div className="px-8 text-center">
-        <div className="font-display text-2xl font-extrabold tracking-[-0.02em]">
-          Eduardo Mattos
-        </div>
+      <div
+        ref={ringRef}
+        style={{
+          position: 'relative',
+          width: 92,
+          height: 92,
+          borderRadius: 9999,
+          border: '2px solid var(--primary)',
+          overflow: 'hidden',
+          transform: 'translate3d(0,0,0)',
+        }}
+      >
         <div
-          className="mt-6 h-px w-[240px] overflow-hidden rounded-full"
-          style={{ background: 'rgba(255,255,255,0.08)' }}
-        >
-          <div
-            ref={barRef}
-            className="h-full w-full"
-            style={{ background: 'var(--primary)' }}
-          />
-        </div>
+          ref={fillRef}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'var(--primary)',
+            borderRadius: 9999,
+            transform: 'scaleY(0)',
+          }}
+        />
       </div>
     </div>
   )
 }
-

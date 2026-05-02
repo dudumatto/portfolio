@@ -11,15 +11,15 @@ export default function About() {
     () => {
       const entryTween = gsap.fromTo(
         sectionRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.45,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             once: true,
           },
         },
@@ -27,15 +27,15 @@ export default function About() {
 
       const contentTween = gsap.fromTo(
         contentRef.current,
-        { x: 100, opacity: 0 },
+        { x: 32, opacity: 0 },
         {
           x: 0,
           opacity: 1,
-          duration: 0.6,
+          duration: 0.45,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 78%',
+            start: 'top 85%',
             once: true,
           },
         },
@@ -81,43 +81,45 @@ export default function About() {
   return (
     <section
       ref={sectionRef}
-      className="section mx-auto max-w-6xl px-8 py-28"
+      className="section"
     >
-      <div className="grid gap-10 md:grid-cols-[220px_1fr] md:gap-16">
-        <div className="select-none">
-          <div
-            ref={numberRef}
-            className="font-display text-[8rem] font-extrabold leading-none opacity-15"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            02
+      <div className="section-inner">
+        <div className="about-content">
+          <div className="select-none">
+            <div
+              ref={numberRef}
+              className="font-display text-[5.5rem] font-extrabold leading-none opacity-[0.14] md:text-[8rem]"
+              style={{ color: 'var(--primary)' }}
+            >
+              02
+            </div>
           </div>
-        </div>
 
-        <div ref={contentRef} className="section-item will-change-transform">
-          <p
-            className="max-w-2xl text-sm leading-[1.9] md:text-base"
-            style={{ color: 'var(--text-secondary)' }}
-          >
-            Sou desenvolvedor frontend focado em criar landing pages e interfaces
-            para SaaS com visual moderno, boa performance e experiência clara.
-            Uso IA para acelerar entregas sem abrir mão de qualidade, organização
-            e manutenção.
-          </p>
+          <div ref={contentRef} className="section-item will-change-transform">
+            <p
+              className="max-w-2xl text-sm leading-[1.9] md:text-base"
+              style={{ color: 'var(--text-secondary)' }}
+            >
+              Sou desenvolvedor frontend focado em criar landing pages e
+              interfaces para SaaS com visual moderno, boa performance e
+              experiência clara. Uso IA para acelerar entregas sem abrir mão de
+              qualidade, organização e manutenção.
+            </p>
 
-          <div className="mt-8 flex flex-wrap gap-3">
-            {skills.map((s) => (
-              <span
-                key={s}
-                className="rounded-full border px-4 py-1 text-xs md:text-sm"
-                style={{
-                  borderColor: 'var(--border)',
-                  color: 'var(--primary)',
-                }}
-              >
-                {s}
-              </span>
-            ))}
+            <div className="mt-8 flex flex-wrap gap-3">
+              {skills.map((s) => (
+                <span
+                  key={s}
+                  className="rounded-full border px-4 py-1 text-xs md:text-sm"
+                  style={{
+                    borderColor: 'var(--border)',
+                    color: 'var(--primary)',
+                  }}
+                >
+                  {s}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

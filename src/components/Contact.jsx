@@ -13,28 +13,28 @@ export default function Contact() {
     () => {
       const entryTween = gsap.fromTo(
         sectionRef.current,
-        { opacity: 0, y: 30 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 0.6,
+          duration: 0.45,
           ease: 'power2.out',
           scrollTrigger: {
             trigger: sectionRef.current,
-            start: 'top 80%',
+            start: 'top 85%',
             once: true,
           },
         },
       )
 
       const targets = charsRef.current.filter(Boolean)
-      gsap.set(targets, { y: 80, opacity: 0 })
+      gsap.set(targets, { y: 60, opacity: 0 })
 
       const charsTween = gsap.to(targets, {
         y: 0,
         opacity: 1,
-        stagger: 0.03,
-        duration: 0.6,
+        stagger: 0.02,
+        duration: 0.5,
         ease: 'power2.out',
         scrollTrigger: {
           trigger: sectionRef.current,
@@ -56,79 +56,85 @@ export default function Contact() {
   return (
     <section
       ref={sectionRef}
-      className="relative flex h-screen flex-col items-center justify-center px-8 text-center"
+      className="section relative text-center"
     >
-      <h2 className="contact-heading font-display relative z-10 mx-auto text-[clamp(2rem,8vw,3rem)] font-extrabold leading-[1.14] tracking-[-0.03em] md:text-[clamp(2.5rem,6vw,5rem)]">
-        {(() => {
-          let charIndex = 0
-          return words.map((word, wordIndex) => (
-            <span
-              key={`${word}-${wordIndex}`}
-              className="inline-block"
-              style={{ whiteSpace: 'nowrap' }}
-            >
-              {Array.from(word).map((c) => {
-                const currentIndex = charIndex
-                charIndex += 1
-                return (
-                  <span
-                    key={`${c}-${currentIndex}`}
-                    ref={(el) => {
-                      charsRef.current[currentIndex] = el
-                    }}
-                    className="inline-block will-change-transform"
-                    style={{ transform: 'translate3d(0,0,0)' }}
-                  >
-                    {c}
-                  </span>
-                )
-              })}
-              {wordIndex < words.length - 1 ? (
-                <span aria-hidden="true">{'\u00A0'}</span>
-              ) : null}
-            </span>
-          ))
-        })()}
-      </h2>
-
-      <a
-        href="mailto:mattosdudu2009@gmail.com"
-        className="section-item contact-email relative z-10 mt-7 text-[1.2rem] opacity-95"
-      >
-        mattosdudu2009@gmail.com
-      </a>
-
-      <a
-        href="tel:+5519983111501"
-        className="section-item relative z-10 mt-2 text-sm opacity-90"
-        style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}
-      >
-        WhatsApp / Telefone: 19 98311-1501
-      </a>
-
-      <div className="section-item relative z-10 mt-6 flex gap-8 text-sm">
+      <div className="section-inner">
+        <h2 className="contact-heading font-display relative z-10 mx-auto text-[clamp(2rem,8vw,3rem)] font-extrabold leading-[1.14] tracking-[-0.03em] md:text-[clamp(2.5rem,6vw,5rem)]">
+          {(() => {
+            let charIndex = 0
+            return words.map((word, wordIndex) => (
+              <span
+                key={`${word}-${wordIndex}`}
+                className="inline-block"
+                style={{ whiteSpace: 'nowrap' }}
+              >
+                {Array.from(word).map((c) => {
+                  const currentIndex = charIndex
+                  charIndex += 1
+                  return (
+                    <span
+                      key={`${c}-${currentIndex}`}
+                      ref={(el) => {
+                        charsRef.current[currentIndex] = el
+                      }}
+                      className="inline-block will-change-transform"
+                      style={{ transform: 'translate3d(0,0,0)' }}
+                    >
+                      {c}
+                    </span>
+                  )
+                })}
+                {wordIndex < words.length - 1 ? (
+                  <span aria-hidden="true">{'\u00A0'}</span>
+                ) : null}
+              </span>
+            ))
+          })()}
+        </h2>
+            <br /><br />
         <a
-          href="https://github.com/dudumatto"
-          className="transition-colors"
-          style={{ color: 'var(--text-secondary)' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = 'var(--text-secondary)')
-          }
+          href="mailto:mattosdudu2009@gmail.com"
+          className="section-item contact-email relative z-10 mt-7 text-[1.2rem] opacity-95"
         >
-          GitHub
+          mattosdudu2009@gmail.com
         </a>
+        <br />
         <a
-          href="https://www.linkedin.com/public-profile/settings/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BpvSUD5DuQIm8hxiZv7EMPg%3D%3D"
-          className="transition-colors"
-          style={{ color: 'var(--text-secondary)' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--primary)')}
-          onMouseLeave={(e) =>
-            (e.currentTarget.style.color = 'var(--text-secondary)')
-          }
+          href="tel:+5519983111501"
+          className="section-item relative z-10 mt-2 text-sm opacity-90"
+          style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}
         >
-          LinkedIn
+          WhatsApp / Telefone: 19 98311-1501
         </a>
+
+        <div className="section-item relative z-10 mt-6 flex justify-center gap-8 text-sm">
+          <a
+            href="https://github.com/dudumatto"
+            className="transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = 'var(--primary)')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = 'var(--text-secondary)')
+            }
+          >
+            GitHub
+          </a>
+          <a
+            href="https://www.linkedin.com/public-profile/settings/?lipi=urn%3Ali%3Apage%3Ad_flagship3_profile_view_base%3BpvSUD5DuQIm8hxiZv7EMPg%3D%3D"
+            className="transition-colors"
+            style={{ color: 'var(--text-secondary)' }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.color = 'var(--primary)')
+            }
+            onMouseLeave={(e) =>
+              (e.currentTarget.style.color = 'var(--text-secondary)')
+            }
+          >
+            LinkedIn
+          </a>
+        </div>
       </div>
 
       <div className="fixed bottom-6 right-6 z-10 text-xs opacity-50">
