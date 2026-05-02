@@ -22,26 +22,42 @@ export default function Hero() {
         delay: 0,
       })
 
-      const isMobile = window.matchMedia('(max-width: 767px)').matches
       gsap.set(title, { transformOrigin: '50% 50%' })
 
-      const scrollTween = gsap.to(title, {
-        scale: isMobile ? 0.84 : 0.6,
-        y: isMobile ? -50 : -120,
-        opacity: 0.8,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        },
+      const mm = gsap.matchMedia()
+
+      mm.add('(max-width: 767px)', () => {
+        return gsap.to(title, {
+          y: -36,
+          opacity: 0.9,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        })
+      })
+
+      mm.add('(min-width: 768px)', () => {
+        return gsap.to(title, {
+          scale: 0.6,
+          y: -120,
+          opacity: 0.8,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: 'top top',
+            end: 'bottom top',
+            scrub: true,
+          },
+        })
       })
 
       return () => {
         introTween.kill()
-        scrollTween.scrollTrigger?.kill()
-        scrollTween.kill()
+        mm.revert()
       }
     },
     { scope: sectionRef },
@@ -73,10 +89,13 @@ export default function Hero() {
         <div className="flex flex-1 flex-col items-center justify-center text-center">
           <h1
             ref={titleRef}
-            className="hero-title font-display font-extrabold leading-[0.9] tracking-[-0.02em] will-change-transform"
+            className="hero-title font-display font-extrabold leading-[0.9] will-change-transform"
             style={{ transform: 'translate3d(0,0,0)' }}
           >
-            Eduardo <span style={{ color: 'var(--primary)' }}>Mattos</span>
+            <span className="hero-title-line">Eduardo</span>
+            <span className="hero-title-line" style={{ color: 'var(--primary)' }}>
+              Mattos
+            </span>
           </h1>
           <p
             className="section-item mt-5 text-sm md:text-base"

@@ -219,8 +219,10 @@ main {
 
 .hero {
   width: 100%;
-  min-height: 100svh;
   overflow: hidden;
+  max-width: 100%;
+  min-height: 100svh;
+  padding-inline: clamp(16px, 5vw, 48px);
 }
 
 img,
@@ -242,22 +244,57 @@ video {
 }
 
 .hero-title {
-  font-size: clamp(3rem, 13vw, 9rem);
-  line-height: 0.9;
   max-width: 100%;
+  width: 100%;
   text-align: center;
+  font-size: clamp(3rem, 12vw, 9rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
   word-break: normal;
   overflow-wrap: normal;
+  white-space: normal;
+  text-wrap: balance;
+}
+
+.hero-title-line {
+  display: inline-block;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
   .hero-title {
-    font-size: clamp(3rem, 16vw, 5rem);
+    width: 100%;
+    max-width: 100%;
+    font-size: clamp(2.2rem, 12vw, 3.8rem) !important;
     line-height: 0.9;
+    letter-spacing: -0.04em;
+    text-align: center;
+    white-space: normal !important;
+    word-break: normal;
+    overflow-wrap: normal;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transform: none !important;
   }
 
   .hero {
-    padding-inline: 1rem;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding-inline: 20px;
+  }
+
+  .hero-title span,
+  .hero-title .line,
+  .hero-title-line {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    margin-inline: auto;
+    transform: none !important;
   }
 
   .section,
