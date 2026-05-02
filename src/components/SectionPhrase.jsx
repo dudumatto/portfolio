@@ -52,15 +52,12 @@ export default function SectionPhrase({ phrase, sub }) {
   return (
     <section
       ref={sectionRef}
-      className="section relative text-center"
+      className="section section-phrase relative text-center"
     >
-      <div className="section-inner">
-        <div className="font-display text-[clamp(2.5rem,6vw,5rem)] font-extrabold leading-[1.05]">
+      <div className="section-inner section-phrase-inner">
+        <h2 className="section-phrase-title font-display">
           {words.map((word, index) => (
-            <span
-              key={`${word}-${index}`}
-              className="inline-block overflow-hidden"
-            >
+            <span key={`${word}-${index}`} className="inline-block overflow-hidden">
               <span
                 ref={(el) => {
                   wordsRef.current[index] = el
@@ -73,23 +70,16 @@ export default function SectionPhrase({ phrase, sub }) {
               </span>
             </span>
           ))}
-        </div>
+        </h2>
 
         {sub ? (
-          <p
-            className="mt-6 max-w-2xl text-sm md:text-base"
-            style={{ color: 'var(--text-secondary)' }}
-          >
+          <p className="section-phrase-sub" style={{ color: 'var(--text-secondary)' }}>
             {sub}
           </p>
         ) : null}
 
-        <div className="mt-8 w-full max-w-2xl opacity-60">
-          <div
-            ref={lineRef}
-            className="h-px w-0"
-            style={{ background: 'var(--border)' }}
-          />
+        <div className="w-full max-w-2xl opacity-60">
+          <div ref={lineRef} className="h-px w-0" style={{ background: 'var(--border)' }} />
         </div>
       </div>
     </section>
