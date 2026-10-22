@@ -54,7 +54,12 @@ export default function Contact() {
           Vamos criar algo <em>incrível</em> juntos?
         </h2>
 
-        <a href="mailto:mattosdudu2009@gmail.com" className="contact-email magnetic">
+        <a
+          href="https://mail.google.com/mail/?view=cm&fs=1&to=mattosdudu2009@gmail.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="contact-email magnetic"
+        >
           mattosdudu2009@gmail.com <span aria-hidden="true">↗</span>
         </a>
 
