@@ -1,24 +1,14 @@
 import Lenis from 'lenis'
 import { useEffect } from 'react'
-import { gsap } from '../gsap.js'
+import { gsap, ScrollTrigger, prefersReducedMotion } from '../gsap.js'
 
 export function useLenis() {
   useEffect(() => {
-    const isMobile =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(max-width: 767px)').matches
-    if (isMobile) return
+    const isMobile = window.matchMedia('(max-width: 767px)').matches
+    if (isMobile || prefersReducedMotion) return
 
-    let lenis
-    try {
-      lenis = new Lenis({
-        lerp: 0.07,
-        smoothWheel: true,
-        smoothTouch: false,
-      })
-    } catch {
-      return
-    }
+    const lenis = new Lenis({ lerp: 0.08, smoothWheel: true, anchors: true })
+    lenis.on('scroll', ScrollTrigger.update)
 
     const onTick = (time) => lenis.raf(time * 1000)
     gsap.ticker.add(onTick)

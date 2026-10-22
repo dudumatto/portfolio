@@ -1,88 +1,52 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { gsap, ScrollTrigger } from '../gsap.js'
+import { useRef, useState } from 'react'
+import { gsap, ScrollTrigger, useGSAP, prefersReducedMotion } from '../gsap.js'
 
 export default function LoadingOverlay() {
   const [visible, setVisible] = useState(true)
   const rootRef = useRef(null)
-  const fillRef = useRef(null)
-  const ringRef = useRef(null)
+  const countRef = useRef(null)
+  const barRef = useRef(null)
 
-  useEffect(() => {
-    const root = rootRef.current
-    const fill = fillRef.current
-    const ring = ringRef.current
-    if (!root || !fill || !ring) return
-
-    gsap.set(root, { opacity: 1 })
-    gsap.set(fill, { scaleY: 0, transformOrigin: '50% 100%' })
-    gsap.set(ring, { scale: 1, transformOrigin: '50% 50%' })
-
-    const tl = gsap.timeline({
-      onComplete: () => {
-        ScrollTrigger.refresh()
+  useGSAP(
+    () => {
+      const counter = { v: 0 }
+      const finish = () => {
         setVisible(false)
-      },
-    })
+        ScrollTrigger.refresh()
+        window.dispatchEvent(new Event('intro-done'))
+      }
 
-    tl.to(fill, { scaleY: 1, duration: 1.25, ease: 'power2.out' })
-      .to({}, { duration: 0.18 })
-      .to(
-        ring,
-        { scale: 26, duration: 0.5, ease: 'power3.out' },
-        '>-0.02',
-      )
-      .to(root, { opacity: 0, duration: 0.28, ease: 'power2.out' }, '<')
-
-    const safety = window.setTimeout(() => {
-      ScrollTrigger.refresh()
-      setVisible(false)
-    }, 2400)
-
-    return () => {
-      window.clearTimeout(safety)
-      tl.kill()
-    }
-  }, [])
+      gsap
+        .timeline({ onComplete: finish })
+        .to(counter, {
+          v: 100,
+          duration: prefersReducedMotion ? 0.2 : 1.6,
+          ease: 'power2.inOut',
+          onUpdate: () => {
+            countRef.current.textContent = String(Math.round(counter.v)).padStart(3, '0')
+          },
+        })
+        .to(barRef.current, { scaleX: 1, duration: 1.6, ease: 'power2.inOut' }, 0)
+        .to('.loader-row', { yPercent: -120, duration: 0.6, ease: 'power3.in', stagger: 0.05 })
+        .to(rootRef.current, { yPercent: -100, duration: 0.9, ease: 'expo.inOut' }, '-=0.2')
+    },
+    { scope: rootRef },
+  )
 
   if (!visible) return null
 
   return (
-    <div
-      ref={rootRef}
-      className="loading-overlay"
-      aria-hidden="true"
-      style={{
-        position: 'fixed',
-        inset: 0,
-        zIndex: 50,
-        background: 'var(--bg)',
-        display: 'grid',
-        placeItems: 'center',
-        pointerEvents: 'none',
-      }}
-    >
-      <div
-        ref={ringRef}
-        style={{
-          position: 'relative',
-          width: 92,
-          height: 92,
-          borderRadius: 9999,
-          border: '2px solid var(--primary)',
-          overflow: 'hidden',
-          transform: 'translate3d(0,0,0)',
-        }}
-      >
-        <div
-          ref={fillRef}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            background: 'var(--primary)',
-            borderRadius: 9999,
-            transform: 'scaleY(0)',
-          }}
-        />
+    <div ref={rootRef} className="loader" aria-hidden="true">
+      <div className="loader-inner">
+        <div className="loader-mask">
+          <span className="loader-row loader-name">Eduardo Mattos</span>
+        </div>
+        <div className="loader-mask">
+          <span ref={countRef} className="loader-row loader-count">000</span>
+        </div>
+      </div>
+      <div className="loader-bar">
+        <i ref={barRef} />
       </div>
     </div>
   )
